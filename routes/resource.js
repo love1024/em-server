@@ -21,11 +21,18 @@ router.get('/:id', (req, res, next) => {
 
 /* SAVE RESOURCE */
 router.post('/', (req, res, next) => {
-  Resource.create(req.body, (err, resource) => {
-    if (err) return next(err)
-    res.json(resource)
+  Resource.find({}, ['resourceId'], { limit: 1, sort: { resourceId: -1 } }, (err, maxId) => {
+    if (maxId.length > 0)
+      req.body.resourceId = maxId[0].resourceId + 1
+    else
+      req.body.resourceId = 1;
+    Resource.create(req.body, (err, resource) => {
+      if (err) return next(err)
+      res.json(resource)
+    })
   })
 })
+
 
 /* UPATE RESOURCE */
 router.put('/:id', (req, res, next) => {

@@ -6,6 +6,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 
 const departmentRoute = require('./routes/department');
+const resourceRoute = require('./routes/resource');
 
 mongoose.Promise = global.Promise;
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 //ROUTES
 app.use('/departments', departmentRoute);
+app.use('/resources', resourceRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

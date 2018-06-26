@@ -22,8 +22,6 @@ router.get('/:id', (req, res, next) => {
 /* SAVE DEPARTMENT */
 router.post('/', (req, res, next) => {
   Department.find({}, ['departmentId'], { limit: 1, sort: { departmentId: -1 } }, (err, maxId) => {
-
-    //Incrementing departmentId
     if (maxId.length > 0)
       req.body.departmentId = maxId[0].departmentId + 1
     else
