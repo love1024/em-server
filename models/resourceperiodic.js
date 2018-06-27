@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-module.exports = mongoose.model('RESOURCEDATA', new Schema({
+module.exports = mongoose.model('RESOURCE_PERIODIC', new Schema({
   year: Number,
   month: Number,
   resourceId: Number,
@@ -10,8 +10,8 @@ module.exports = mongoose.model('RESOURCEDATA', new Schema({
   standbyDays: Number,
   oncallSupportWeekdayDays: Number,
   oncallSupportWeekendDays: Number,
-  onsiteStartDate: datetime,
-  onsiteEndDate: datetime,
+  onsiteStartDate: { type: Date, default: Date.now },
+  onsiteEndDate: { type: Date, default: Date.now },
   unplannedAbsenteesm: Number,
   utilization: Number,
   resourceIsFixPrice: Boolean,

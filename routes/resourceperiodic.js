@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const ResourceData = require('../models/resourcedata')
+const ResourceData = require('../models/resourceperiodic')
 
 /* GET RESOURCE DATA BY ID */
 router.get('/:id', (req, res, next) => {

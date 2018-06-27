@@ -10,6 +10,8 @@ const resourceRoute = require('./routes/resource');
 const projectRoute = require('./routes/project');
 const attendanceRoute = require('./routes/attendance');
 const billingRoute = require('./routes/billingrate');
+const levelChange = require('./routes/levelchange');
+const resourcePeriodic = require('./routes/resourceperiodic');
 
 mongoose.Promise = global.Promise;
 
@@ -30,6 +32,8 @@ app.use('/resources', resourceRoute);
 app.use('/projects', projectRoute);
 app.use('/attendance', attendanceRoute);
 app.use('/billing', billingRoute);
+app.use('/level', levelChange);
+app.use('/resourceperiodic', resourcePeriodic);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
