@@ -8,13 +8,14 @@ module.exports = mongoose.model('RESOURCE', new Schema({
   resourceErsteJoiningDate: { type: Date, default: Date.now },
   resourceProjectId: Number,
   isNagarroTam: Boolean,
-  resourceLevelName: String,
+  resourceLevelId: Number,
   resourceCertifications: String,
   resourceAllocation: Number,
   resourceAllocationEndDate: { type: Date, default: Date.now },
   resourceIsbillable: Boolean,
   resourceIsPm: Boolean,
   resourceLevelMsaName: String,
-  resourceLevelChangeId: [{ type: Schema.Types.ObjectId, ref: 'LEVEL_CHANGE' }],
+  levelChangeStartDate: { type: Date, default: Date.now },
+  levelChangeEndDate: { type: Date, default: Date.now },
   resourceBillingId: String
 }))

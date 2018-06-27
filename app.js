@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 
 const departmentRoute = require('./routes/department');
 const resourceRoute = require('./routes/resource');
+const projectRoute = require('./routes/project');
+const attendanceRoute = require('./routes/attendance');
+const billingRoute = require('./routes/billingrate');
 
 mongoose.Promise = global.Promise;
 
@@ -24,6 +27,9 @@ app.use(cookieParser());
 //ROUTES
 app.use('/departments', departmentRoute);
 app.use('/resources', resourceRoute);
+app.use('/projects', projectRoute);
+app.use('/attendance', attendanceRoute);
+app.use('/billing', billingRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
