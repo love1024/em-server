@@ -2,20 +2,20 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 module.exports = mongoose.model('RESOURCE', new Schema({
-  resourceId: Number,
-  resourceName: String,
-  resourceEmail: String,
-  resourceErsteJoiningDate: { type: Date, default: Date.now },
-  resourceProjectId: Number,
+  resourceId: { type: Number, required: true },
+  resourceName: { type: String, required: true },
+  resourceEmail: { type: String, required: true },
+  resourceErsteJoiningDate: { type: Date, default: Date.now, required: true },
+  resourceProjectId: { type: Number, required: true },
   isNagarroTAM: Boolean,
-  resourceLevelId: Number,
-  resourceCertifications: String,
-  resourceAllocation: Number,
-  resourceAllocationEndDate: { type: Date, default: Date.now },
+  resourceLevelId: { type: Number, required: true },
+  resourceCertifications: { type: String, required: true },
+  resourceAllocation: { type: Number, required: true },
+  resourceAllocationEndDate: { type: Date, default: Date.now, required: true },
   resourceIsBillable: Boolean,
   resourceIsPM: Boolean,
-  resourceLevelMsaName: String,
-  levelChangeStartDate: { type: Date, default: Date.now },
+  resourceLevelMsaName: { type: String, required: true },
+  levelChangeStartDate: { type: Date, default: Date.now, required: true },
   levelChangeEndDate: { type: Date, default: Date.now },
-  resourceBillingId: String
+  resourceBillingId: { type: String, required: true }
 }))

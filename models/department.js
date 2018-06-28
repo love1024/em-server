@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 module.exports = mongoose.model('DEPARTMENT', new Schema({
-  departmentId: Number,
-  departmentName: String,
-  departmentHod: String,
-  departmentHodEmail: String
+  departmentId: { type: Number, required: true },
+  departmentName: { type: String, required: true },
+  departmentHod: { type: String, required: true },
+  departmentHodEmail: { type: String, required: true },
 }))
