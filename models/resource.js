@@ -9,7 +9,7 @@ module.exports = mongoose.model('RESOURCE', new Schema({
   resourceProjectId: { type: Number, required: true },
   isNagarroTAM: Boolean,
   resourceLevelId: { type: Number, required: true },
-  resourceCertifications: { type: String, required: true },
+  resourceCertifications: { type: String },
   resourceAllocation: { type: Number, required: true },
   resourceAllocationEndDate: { type: Date, default: Date.now, required: true },
   resourceIsBillable: Boolean,
