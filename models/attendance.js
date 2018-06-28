@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 module.exports = mongoose.model('ATTENDANCE', new Schema({
   attendanceId: Number,
+  resourceId: { type: Number, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   attendanceType: { type: String, required: true },
