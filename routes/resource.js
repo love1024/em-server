@@ -5,7 +5,8 @@ const Resource = require('../models/resource')
 
 /* GET ALL RESOURCES */
 router.get('/', (req, res, next) => {
-  Resource.find((err, resources) => {
+  const query = req.params.active ? { 'active': req.params.active } : {};
+  Resource.find(query, (err, resources) => {
     if (err) return next(err)
     res.json(resources)
   })
