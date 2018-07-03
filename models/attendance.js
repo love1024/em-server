@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+
 module.exports = mongoose.model('ATTENDANCE', new Schema({
   attendanceId: Number,
   resourceId: { type: Number, required: true },
