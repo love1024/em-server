@@ -38,7 +38,7 @@ router.put('/:id', (req, res, next) => {
   Project.findOneAndUpdate({ projectId: req.params.id },
     req.body, { upsert: true }, (err, project) => {
       if (err) return next(err)
-      res.json(department)
+      res.json(project)
     })
 })
 
