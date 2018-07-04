@@ -11,7 +11,7 @@ module.exports = mongoose.model('RESOURCE', new Schema({
   active: { type: Boolean, required: true },
   dateFrom: { type: Date, default: Date.now() },
   dateUntil: { type: Date, default: Date.now() },
-  fipUser: String,
-  fipProg: String,
+  fipUser: { type: String, required: true },
+  fipProg: { type: String, required: true },
   fipTst: { type: Date, default: Date.now() },
 }))
