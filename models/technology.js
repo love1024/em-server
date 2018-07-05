@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-module.exports = mongoose.model('DEPARTMENT', new Schema({
-  departmentId: { type: Number },
-  departmentName: { type: String, required: true },
-  departmentHod: { type: String, required: true },
-  departmentHodEmail: { type: String, required: true },
+module.exports = mongoose.model('TECHNOLOGY', new Schema({
+  technologyId: { type: Number },
+  technologyName: { type: String, required: true },
+  resLevelMsaName: { type: String, required: true },
   dateFrom: { type: Date, default: Date.now() },
   dateUntil: { type: Date, default: Date.now() },
   fipUser: { type: String, required: true },
