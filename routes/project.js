@@ -5,7 +5,8 @@ const Project = require('../models/project')
 
 /* GET ALL PROJECT */
 router.get('/', (req, res, next) => {
-  Project.find((err, projects) => {
+  const query = req.query.active ? { 'active': req.query.active } : {};
+  Project.find(query, (err, projects) => {
     if (err) return next(err)
     res.json(projects)
   })
@@ -35,7 +36,7 @@ router.post('/', (req, res, next) => {
 
 /* UPATE PROJECT */
 router.put('/:id', (req, res, next) => {
-  Project.findOneAndUpdate({ projectId: req.params.id },
+  Project.findOneAndUpdate({ _id: req.params.id },
     req.body, { upsert: true }, (err, project) => {
       if (err) return next(err)
       res.json(project)
@@ -44,7 +45,7 @@ router.put('/:id', (req, res, next) => {
 
 /* REMOVE PROJECT */
 router.delete('/:id', (req, res, next) => {
-  Project.remove({ projectId: req.params.id }, (err, project) => {
+  Project.remove({ _id: req.params.id }, (err, project) => {
     if (err) return next(err)
     res.json(project)
   })

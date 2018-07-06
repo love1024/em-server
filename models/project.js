@@ -17,6 +17,7 @@ module.exports = mongoose.model('PROJECT', new Schema({
   projectEndDate: { type: Date, required: true },
   projectCostCenter: { type: Number, required: true },
   projectPONumber: { type: Number, required: true },
+  active: { type: Boolean, required: true },
   dateFrom: { type: Date, default: Date.now() },
   dateUntil: { type: Date, default: Date.now() },
   fipUser: { type: String, required: true },

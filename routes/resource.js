@@ -5,7 +5,7 @@ const Resource = require('../models/resource')
 
 /* GET ALL RESOURCES */
 router.get('/', (req, res, next) => {
-  const query = req.params.active ? { 'active': req.params.active } : {};
+  const query = req.query.active ? { 'active': req.query.active } : {};
   Resource.find(query, (err, resources) => {
     if (err) return next(err)
     res.json(resources)
@@ -31,7 +31,7 @@ router.post('/', (req, res, next) => {
 
 /* UPATE RESOURCE */
 router.put('/:id', (req, res, next) => {
-  Resource.findOneAndUpdate({ resourceId: req.params.id },
+  Resource.findOneAndUpdate({ _id: req.params.id },
     req.body, { upsert: true }, (err, resource) => {
       if (err) return next(err)
       res.json(resource)
@@ -40,7 +40,7 @@ router.put('/:id', (req, res, next) => {
 
 /* REMOVE RESOURCE */
 router.delete('/:id', (req, res, next) => {
-  Resource.remove({ resourceId: req.params.id }, (err, resource) => {
+  Resource.remove({ _id: req.params.id }, (err, resource) => {
     if (err) return next(err)
     res.json(resource)
   })
