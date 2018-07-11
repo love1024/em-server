@@ -23,10 +23,12 @@ router.get('/:id', (req, res, next) => {
 /* SAVE PROJECT */
 router.post('/', (req, res, next) => {
   Project.find({}, ['projectId'], { limit: 1, sort: { projectId: -1 } }, (err, maxId) => {
-    if (maxId.length > 0 && maxId[0].projectId)
-      req.body.projectId = parseInt(maxId[0].projectId) + 1
-    else
-      req.body.projectId = 1;
+    if (!req.body.projectId) {
+      if (maxId.length > 0 && maxId[0].projectId)
+        req.body.projectId = parseInt(maxId[0].projectId) + 1
+      else
+        req.body.projectId = 1;
+    }
     Project.create(req.body, (err, post) => {
       if (err) return next(err)
       res.json(post)

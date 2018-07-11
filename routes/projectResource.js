@@ -18,10 +18,12 @@ router.get('/:id', (req, res, next) => {
 /* SAVE PROJECT */
 router.post('/', (req, res, next) => {
   ProjectResource.find({}, ['projectResourceId'], { limit: 1, sort: { projectResourceId: -1 } }, (err, maxId) => {
-    if (maxId.length > 0 && maxId[0].projectResourceId)
-      req.body.projectResourceId = parseInt(maxId[0].projectResourceId) + 1
-    else
-      req.body.projectResourceId = 1;
+    if (!req.body.projectResourceId) {
+      if (maxId.length > 0 && maxId[0].projectResourceId)
+        req.body.projectResourceId = parseInt(maxId[0].projectResourceId) + 1
+      else
+        req.body.projectResourceId = 1;
+    }
     ProjectResource.create(req.body, (err, post) => {
       if (err) return next(err)
       res.json(post)
