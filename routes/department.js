@@ -5,7 +5,8 @@ const Department = require('../models/department')
 
 /* GET ALL DEPARTMENTS */
 router.get('/', (req, res, next) => {
-  Department.find((err, departments) => {
+  const query = req.query.active ? { 'active': req.query.active } : {};
+  Department.find(query, (err, departments) => {
     if (err) return next(err)
     res.json(departments)
   })
@@ -35,7 +36,7 @@ router.post('/', (req, res, next) => {
 
 /* UPATE DEPARTMENT */
 router.put('/:id', (req, res, next) => {
-  Department.findOneAndUpdate({ departmentId: req.params.id },
+  Department.findOneAndUpdate({ _id: req.params.id },
     req.body, { upsert: true }, (err, department) => {
       if (err) return next(err)
       res.json(department)
@@ -44,7 +45,7 @@ router.put('/:id', (req, res, next) => {
 
 /* REMOVE DEPARTMENT */
 router.delete('/:id', (req, res, next) => {
-  Department.remove({ departmentId: req.params.id }, (err, department) => {
+  Department.remove({ _id: req.params.id }, (err, department) => {
     if (err) return next(err)
     res.json(department)
   })
