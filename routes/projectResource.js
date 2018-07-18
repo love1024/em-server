@@ -2,10 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 const ProjectResource = require('../models/projectResource')
+const Project = require('../models/project');
 
 
-/* GET PROJECT BY ID */
-router.get('/:id', (req, res, next) => {
+/* GET RESOURCES BY PROJECT ID */
+router.get('/project/:id', (req, res, next) => {
   let query = { projectId: req.params.id };
   if (req.query.active)
     query.active = req.query.active;
@@ -15,7 +16,20 @@ router.get('/:id', (req, res, next) => {
   })
 })
 
-/* SAVE PROJECT */
+/* GET PROJECTS BY RESOURCE ID */
+router.get('/resource/:id', (req, res, next) => {
+  let query = { resourceId: req.params.id };
+  if (req.query.active)
+    query.active = req.query.active;
+  ProjectResource.find(query, (err, projects) => {
+    if (err) return next(err)
+    res.json(projects)
+  })
+})
+
+
+
+/* SAVE PROJECT RESOURCE */
 router.post('/', (req, res, next) => {
   ProjectResource.find({}, ['projectResourceId'], { limit: 1, sort: { projectResourceId: -1 } }, (err, maxId) => {
     if (!req.body.projectResourceId) {
@@ -31,7 +45,7 @@ router.post('/', (req, res, next) => {
   })
 })
 
-/* UPATE PROJECT */
+/* UPATE PROJECT RESOURCE*/
 router.put('/:id', (req, res, next) => {
   ProjectResource.findOneAndUpdate({ _id: req.params.id },
     req.body, { upsert: true }, (err, resource) => {
@@ -40,7 +54,7 @@ router.put('/:id', (req, res, next) => {
     })
 })
 
-/* REMOVE PROJECT */
+/* REMOVE PROJECT RESOURCE*/
 router.delete('/:id', (req, res, next) => {
   ProjectResource.remove({ _id: req.params.id }, (err, resource) => {
     if (err) return next(err)

@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
   })
 })
 
-/* GET DEPARTMENTS BY ID */
+/* GET RESOURCE BY ID */
 router.get('/:id', (req, res, next) => {
   Resource.find({ resourceId: req.params.id }, (err, resource) => {
     if (err) return next(err)
