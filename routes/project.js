@@ -20,6 +20,14 @@ router.get('/:id', (req, res, next) => {
   })
 })
 
+/* GET PROJECT BY DEPARTMENT ID */
+router.get('/department/:id', (req, res, next) => {
+  Project.find({ departmentId: req.params.id }, (err, projects) => {
+    if (err) return next(err)
+    res.json(projects)
+  })
+})
+
 /* SAVE PROJECT */
 router.post('/', (req, res, next) => {
   Project.find({}, ['projectId'], { limit: 1, sort: { projectId: -1 } }, (err, maxId) => {

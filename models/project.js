@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 module.exports = mongoose.model('PROJECT', new Schema({
   projectId: { type: Number },
   projectNameAsPerSow: { type: String, required: true },
+  teamName: { type: String, required: true },
   departmentId: { type: Number, required: true },
   technologyId: { type: [Number], required: true },
   projectModelName: { type: String, required: true },
