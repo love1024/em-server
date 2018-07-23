@@ -19,10 +19,13 @@ router.get('/project/:id', (req, res, next) => {
 /* GET PROJECTS BY RESOURCE ID */
 router.get('/resource/:id', (req, res, next) => {
   let query = { resourceId: req.params.id };
+
   if (req.query.active)
     query.active = req.query.active;
+
   ProjectResource.find(query, (err, projects) => {
     if (err) return next(err)
+    console.log(projects);
     res.json(projects)
   })
 })
