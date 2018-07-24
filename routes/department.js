@@ -23,10 +23,12 @@ router.get('/:id', (req, res, next) => {
 /* SAVE DEPARTMENT */
 router.post('/', (req, res, next) => {
   Department.find({}, ['departmentId'], { limit: 1, sort: { departmentId: -1 } }, (err, maxId) => {
-    if (maxId.length > 0 && maxId[0].departmentId)
-      req.body.departmentId = parseInt(maxId[0].departmentId) + 1
-    else
-      req.body.departmentId = 1;
+    if (!req.body.departmentId) {
+      if (maxId.length > 0 && maxId[0].departmentId)
+        req.body.departmentId = parseInt(maxId[0].departmentId) + 1
+      else
+        req.body.departmentId = 1;
+    }
     Department.create(req.body, (err, post) => {
       if (err) return next(err)
       res.json(post)
