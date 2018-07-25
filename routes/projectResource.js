@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 const ProjectResource = require('../models/projectResource')
+const BillingRate = require('../models/billing_rate');
 const Project = require('../models/project');
+const Resource = require('../models/resource');
 
 
 /* GET RESOURCES BY PROJECT ID */
@@ -41,9 +43,19 @@ router.post('/', (req, res, next) => {
       else
         req.body.projectResourceId = 1;
     }
-    ProjectResource.create(req.body, (err, post) => {
-      if (err) return next(err)
-      res.json(post)
+    const resourceQuery = { resourceId: req.body.resourceId, active: true };
+    Resource.find(resourceQuery, { _id: 0, resourceLevelId: 1 }, (err, level) => {
+      if (level.length > 0)
+        req.body.resourceLevelId = level[0].resourceLevelId;
+      const billingQuery = { technologyId: req.body.technologyId, resourceLevelId: req.body.resourceLevelId, active: true };
+      BillingRate.find(billingQuery, { billingId: 1, _id: 0 }, (err, billing) => {
+        if (billing.length > 0)
+          req.body.billRateId = billing[0].billingId;
+        ProjectResource.create(req.body, (err, post) => {
+          if (err) return next(err)
+          res.json(post)
+        })
+      })
     })
   })
 })

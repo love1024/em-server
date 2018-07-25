@@ -14,7 +14,9 @@ router.get('/', (req, res, next) => {
 
 /* GET RESOURCE BY ID */
 router.get('/:id', (req, res, next) => {
-  Resource.find({ resourceId: req.params.id }, (err, resource) => {
+  const query = req.query.active ? { 'active': req.query.active } : {};
+  query.resourceId = req.params.id;
+  Resource.find(query, (err, resource) => {
     if (err) return next(err)
     res.json(resource)
   })

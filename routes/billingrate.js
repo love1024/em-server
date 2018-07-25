@@ -22,11 +22,12 @@ router.get('/:id', (req, res, next) => {
 /* SAVE BILLING */
 router.post('/', (req, res, next) => {
   BillingRate.find({}, { 'billingId': 1, '_id': 0 }, { limit: 1, sort: { billingId: -1 } }, (err, maxId) => {
-
-    if (maxId.length > 0 && maxId[0].billingId)
-      req.body.billingId = parseInt(maxId[0].billingId) + 1
-    else
-      req.body.billingId = 1;
+    if (!req.body.billingId) {
+      if (maxId.length > 0 && maxId[0].billingId)
+        req.body.billingId = parseInt(maxId[0].billingId) + 1
+      else
+        req.body.billingId = 1;
+    }
     BillingRate.create(req.body, (err, post) => {
       if (err) return next(err)
       res.json(post)
@@ -36,7 +37,7 @@ router.post('/', (req, res, next) => {
 
 /* UPATE BILLING */
 router.put('/:id', (req, res, next) => {
-  BillingRate.findOneAndUpdate({ billingId: req.params.id },
+  BillingRate.findOneAndUpdate({ _id: req.params.id },
     req.body, { upsert: true }, (err, billing) => {
       if (err) return next(err)
       res.json(billing)
@@ -45,7 +46,7 @@ router.put('/:id', (req, res, next) => {
 
 /* REMOVE BILLING */
 router.delete('/:id', (req, res, next) => {
-  BillingRate.remove({ billingId: req.params.id }, (err, billing) => {
+  BillingRate.remove({ _id: req.params.id }, (err, billing) => {
     if (err) return next(err)
     res.json(billing)
   })
