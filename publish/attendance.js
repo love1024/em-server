@@ -1,104 +1,80 @@
-const xl = require('excel4node')
+const Excel = require('exceljs')
 const express = require('express')
 const router = express.Router()
 
 const Attendance = require('../models/attendance')
 const Resource = require('../models/resource')
+const Project = require('../models/project')
+const Mapping = require('../models/projectResource')
 
-const wb = new xl.Workbook()
-const ws = wb.addWorksheet("WFH")
+let workbook = new Excel.Workbook();
 
-//Columns of WFH
-const cols = [
-  { id: "resourceName", name: 'Project Team Members' },
-  { id: "projectName", name: 'Project', value: 'Realpay' },
-  { id: "date", name: 'Start Date' },
-  { id: "date", name: 'End Date' },
-  { id: "duration", name: 'Duration', value: "1" },
-  { id: "approved", name: 'Status', value: 'Approved' },
-  { id: "fipUser", name: 'Decision Maker' },
-  { id: "approvalDate", name: 'Decision Date' },
-  { id: "remarks", name: 'Reason for WFH' },
-  { id: "presentType", name: 'Location' }
-];
+let atData = null;
+let reData = null;
+let prData = null;
+let mpData = null;
+let data = null;
 
 router.get('/', (req, res, next) => {
-  const file = createFile(res, next);
+  Attendance.find({}, (err, data) => {
+    if (err) return next(err);
+    atData = data;
+    generateExcel(req, res, next);
+  })
+  Resource.find({ active: true }, (err, data) => {
+    if (err) return next(err);
+    reData = data;
+    generateExcel(req, res, next);
+  })
+  Project.find({ active: true }, (err, data) => {
+    if (err) return next(err);
+    prData = data;
+    generateExcel(req, res, next);
+  })
+  Mapping.find({ active: true }, (err, data) => {
+    if (err) return next(err);
+    mpData = data;
+    generateExcel(req, res, next);
+  })
 })
 
-function createFile(res, next) {
-  createHeader();
-  createBody(res, next);
-}
-
-function createBody(res, next) {
-  findAllResources(next, (resources) => {
-    let rowNo = 2;
-    for (let i = 0; i < resources.length; i++) {
-      const query = { resourceId: resources[i].resourceId, wfh: true };
-      findAttendanceByQuery(next, query, (attendance) => {
-        for (let j = 0; j < attendance.length; j++) {
-          ws.cell(rowNo, 1).string(resources[i].resourceName);
-          console.log(resources[i].resourceName);
-          for (let k = 1; k < cols.length; k++) {
-            let result = attendance[j][cols[k].id] ? attendance[j][cols[k].id] : cols[k].value;
-            if (typeof result == "object")
-              ws.cell(rowNo, k + 1).date(result).style({ alignment: { horizontal: 'left' } });
-            else if (typeof result == "string")
-              ws.cell(rowNo, k + 1).string(result).style({ alignment: { horizontal: 'left' } });
+function generateExcel(req, res, next) {
+  if (atData && reData && prData && mpData) {
+    workbook.xlsx.readFile('./xlformat/attendance.xlsx')
+      .then(() => {
+        let worksheet = workbook.getWorksheet('Sheet1');
+        let curRow = 2;
+        for (const re of reData) {
+          let ats = atData.filter(at => re.resourceId == at.resourceId);
+          for (const at of ats) {
+            worksheet.getRow(curRow).values = getValues(re, at);
+            curRow++;
           }
-          rowNo++;
         }
-        if (i == resources.length - 1)
-          wb.write("attendance.xlsx", res);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        workbook.xlsx.write(res)
+          .then(() => {
+            console.log("Success generating attendance");
+            res.end();
+          })
       })
-    }
-  })
-}
-
-
-function findAttendanceByQuery(next, query, cb) {
-  Attendance.find(query, (err, attendance) => {
-    if (err) return next(err)
-    // console.log("ATTENDANCE " + query.resourceId, attendance);
-    cb(attendance);
-  })
-}
-
-function findAllResources(next, cb) {
-  Resource.find({ active: true }, (err, resources) => {
-    if (err) return next(err)
-    // console.log("RESOURCES", resources);
-    cb(resources);
-  })
-}
-
-function createHeader() {
-  const headerStyle = getHeaderStyle(wb)
-  ws.row(1).setHeight(30);
-  for (let i = 1; i <= cols.length; i++) {
-    ws.cell(1, i).string(cols[i - 1].name).style(headerStyle);
-    ws.column(i).setWidth(cols[i - 1].name.length + 6);
   }
 }
 
-function getHeaderStyle() {
-  return wb.createStyle({
-    font: {
-      color: "#ffffff",
-      size: 12,
-      bold: true
-    },
-    fill: {
-      type: 'pattern',
-      patternType: 'solid',
-      fgColor: '#881e33'
-    },
-    alignment: {
-      horizontal: 'center',
-      vertical: 'center'
-    }
-  });
+function getValues(re, at) {
+  return [
+    re.resourceName,
+    'Realpay',
+    new Date(at.date),
+    at.date,
+    1,
+    'Approved',
+    'Puneet Verma',
+    at.approvalDate,
+    at.remarks,
+    re.location
+  ]
 }
+
 
 module.exports = router; 
