@@ -46,11 +46,12 @@ function generateExcel(req, res, next) {
         let worksheet = workbook.getWorksheet('Sheet1');
         let curRow = 2;
         for (const re of reData) {
-          let ats = atData.filter(at => ((re.resourceId == at.resourceId) && at.wfh));
+          let ats = atData.filter(at => ((re.resourceId == at.resourceId) && !at.wfh));
           let mps = mpData.filter(mp => re.resourceId == mp.resourceId);
           mps = getMaxAllocation(mps);
           let pr = prData.filter(pr => pr.projectId == mps.projectId);
           for (const at of ats) {
+            console.log(at.wfh);
             worksheet.getRow(curRow).values = getValues(re, at, pr[0]);
             curRow++;
           }

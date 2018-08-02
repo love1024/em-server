@@ -17,6 +17,7 @@ const technologyRoute = require('./routes/technology');
 const projectResourceRoute = require('./routes/projectResource');
 
 const attendancePublish = require('./publish/attendance');
+const leavePublish = require('./publish/leave');
 
 mongoose.Promise = global.Promise;
 
@@ -42,6 +43,7 @@ app.use('/level', levelInfo);
 app.use('/resourceperiodic', resourcePeriodic);
 app.use('/technology', technologyRoute);
 app.use('/publish/attendance', attendancePublish);
+app.use('/publish/leave', leavePublish);
 app.use('/projectresource', projectResourceRoute);
 
 // catch 404 and forward to error handler
