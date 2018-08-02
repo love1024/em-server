@@ -15,6 +15,7 @@ const levelInfo = require('./routes/levelInfo');
 const resourcePeriodic = require('./routes/resourceperiodic');
 const technologyRoute = require('./routes/technology');
 const projectResourceRoute = require('./routes/projectResource');
+const loginRoute = require('./routes/login');
 
 const attendancePublish = require('./publish/attendance');
 const leavePublish = require('./publish/leave');
@@ -45,6 +46,7 @@ app.use('/technology', technologyRoute);
 app.use('/publish/attendance', attendancePublish);
 app.use('/publish/leave', leavePublish);
 app.use('/projectresource', projectResourceRoute);
+app.use('/login', loginRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
