@@ -22,7 +22,7 @@ router.post('/', function (req, res, next) {
       let token = jwt.sign(payload, config.secret, {
         expiresIn: config.tokenExpiesIn
       });
-      response = { type: "ok", token: token, expiresIn: config.tokenExpiesIn };
+      response = { type: "ok", token: token, expiresIn: config.tokenExpiesIn, resourceId: username };
     } else
       response = { type: "fail" };
     res.json(response);

@@ -20,6 +20,14 @@ router.get('/:id', (req, res, next) => {
   })
 })
 
+/* GET PROJECT BY ID */
+router.get('/pm/:id', (req, res, next) => {
+  Project.find({ projectNagarroPMId: req.params.id, active: true }, (err, projects) => {
+    if (err) return next(err)
+    res.json(projects)
+  })
+})
+
 /* GET PROJECT BY DEPARTMENT ID */
 router.get('/department/:id', (req, res, next) => {
   Project.find({ departmentId: req.params.id }, (err, projects) => {
