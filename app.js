@@ -5,7 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const expressJwt = require('express-jwt');
 
+const config = require('./config');
 const departmentRoute = require('./routes/department');
 const resourceRoute = require('./routes/resource');
 const projectRoute = require('./routes/project');
@@ -33,6 +35,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+
+//Check auth token unless given routes
+app.use(expressJwt({ secret: config.secret }).unless({ path: ['/login'] }))
 
 //ROUTES
 app.use('/departments', departmentRoute);
