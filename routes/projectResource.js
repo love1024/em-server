@@ -27,7 +27,6 @@ router.get('/resource/:id', (req, res, next) => {
 
   ProjectResource.find(query, (err, projects) => {
     if (err) return next(err)
-    console.log(projects);
     res.json(projects)
   })
 })

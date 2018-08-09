@@ -27,7 +27,6 @@ router.post('/', (req, res, next) => {
     else
       req.body.technologyId = 1;
     Technology.create(req.body, (err, post) => {
-      console.log(err);
       if (err) return next(err)
       res.json(post)
     })

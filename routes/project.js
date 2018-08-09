@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Project = require('../models/project')
+const Resource = require('../models/resource')
 
 /* GET ALL PROJECT */
 router.get('/', (req, res, next) => {
@@ -22,15 +23,24 @@ router.get('/:id', (req, res, next) => {
 
 /* GET PROJECT BY ID */
 router.get('/pm/:id', (req, res, next) => {
-  Project.find({ projectNagarroPMId: req.params.id, active: true }, (err, projects) => {
-    if (err) return next(err)
-    res.json(projects)
+  Resource.find({ resourceId: req.params.id, active: true }, { _id: 0, role: 1 }, (err, resource) => {
+    let role = resource[0]["role"];
+    let query;
+    if (role == "manager")
+      query = { projectNagarroPMId: req.params.id, active: true };
+    else
+      query = { active: true };
+    Project.find(query, (err, projects) => {
+      if (err) return next(err)
+      res.json(projects)
+    })
   })
+
 })
 
 /* GET PROJECT BY DEPARTMENT ID */
 router.get('/department/:id', (req, res, next) => {
-  Project.find({ departmentId: req.params.id }, (err, projects) => {
+  Project.find({ departmentId: req.params.id, active: true }, (err, projects) => {
     if (err) return next(err)
     res.json(projects)
   })

@@ -14,9 +14,28 @@ let reData = null;
 let prData = null;
 let mpData = null;
 let data = null;
+let startDate = null;
+let endDate = null;
+let resourceName = null;
 
-router.get('/', (req, res, next) => {
-  atData = reData = prData = mpData = data = null;
+router.get('/:id', (req, res, next) => {
+  atData = reData = prData = mpData = data = resourceName = null;
+  startDate = new Date(parseInt(req.query.start, 10));
+  endDate = new Date(parseInt(req.query.end, 10));
+  Resource.find({ resourceId: req.params.id, active: true }, { _id: 0, role: 1, resourceName: 1 }, (err, resource) => {
+    let role = resource[0]["role"];
+    resourceName = resource[0]["resourceName"];
+    let query;
+    if (role == "manager")
+      query = { projectNagarroPMId: req.params.id, active: true };
+    else
+      query = { active: true };
+    Project.find(query, (err, data) => {
+      if (err) return next(err);
+      prData = data;
+      generateExcel(req, res, next);
+    })
+  })
   Attendance.find({}, (err, data) => {
     if (err) return next(err);
     atData = data;
@@ -25,11 +44,6 @@ router.get('/', (req, res, next) => {
   Resource.find({ active: true }, (err, data) => {
     if (err) return next(err);
     reData = data;
-    generateExcel(req, res, next);
-  })
-  Project.find({ active: true }, (err, data) => {
-    if (err) return next(err);
-    prData = data;
     generateExcel(req, res, next);
   })
   Mapping.find({ active: true }, (err, data) => {
@@ -45,15 +59,23 @@ function generateExcel(req, res, next) {
       .then(() => {
         let worksheet = workbook.getWorksheet('Sheet1');
         let curRow = 2;
-        for (const re of reData) {
-          let ats = atData.filter(at => ((re.resourceId == at.resourceId) && !at.wfh));
-          let mps = mpData.filter(mp => re.resourceId == mp.resourceId);
-          mps = getMaxAllocation(mps);
-          let pr = prData.filter(pr => pr.projectId == mps.projectId);
+        let resultResources = [];
+        for (const pr of prData) {
+          const mps = mpData.filter((mp) => mp.projectId == pr.projectId);
+          for (const mp of mps) {
+            let re = reData.filter((re) => mp.resourceId == re.resourceId);
+            let alreadyExist = resultResources.filter((curRes) => re[0].resourceId == curRes.re.resourceId);
+            if (re.length > 0 && alreadyExist.length == 0)
+              resultResources.push({ re: re[0], pr: pr });
+          }
+        }
+        for (const re of resultResources) {
+          const ats = atData.filter((at) => (at.resourceId == re.re.resourceId) && (!at.wfh));
           for (const at of ats) {
-            console.log(at.wfh);
-            worksheet.getRow(curRow).values = getValues(re, at, pr[0]);
-            curRow++;
+            if (at.date >= startDate && at.date <= endDate) {
+              worksheet.getRow(curRow).values = getValues(re.re, at, re.pr);
+              curRow++;
+            }
           }
         }
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -67,7 +89,6 @@ function generateExcel(req, res, next) {
 }
 
 function getValues(re, at, pr) {
-  console.log((new Date(at.date).toLocaleDateString()))
   return [
     re.resourceName,
     pr["projectNameAsPerSow"],
@@ -75,7 +96,7 @@ function getValues(re, at, pr) {
     (new Date(at.date).toLocaleDateString()),
     1,
     'Approved',
-    'Puneet Verma',
+    resourceName,
     (new Date(at.approvalDate).toLocaleDateString()),
     at.remarks,
     re.location

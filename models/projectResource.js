@@ -8,6 +8,7 @@ module.exports = mongoose.model('PROJECT_RESOURCE', new Schema({
   billRateId: { type: Number, required: true },
   resourceAllocation: { type: Number, required: true },
   resourceIsBillable: { type: Boolean, required: true },
+  nonBillable: { type: String, required: true },
   technologyId: { type: Number, required: true },
   keyResource: { type: Boolean, required: true },
   invoicingEntity: { type: String, required: true },

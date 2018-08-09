@@ -11,10 +11,9 @@ router.post('/', function (req, res, next) {
   const password = req.body.password;
 
   let response;
-  let query = { resourceId: username, password: password };
-  Resource.find({ resourceId: username, password: password }, (err, resources) => {
+  let query = { resourceId: username, password: password, active: true };
+  Resource.find(query, (err, resources) => {
     if (err) return next(err);
-    console.log(resources);
     if (resources.length > 0) {
       const payload = {
         username: username
@@ -28,5 +27,19 @@ router.post('/', function (req, res, next) {
     res.json(response);
   })
 });
+
+/* Change password */
+router.post('/:id', function (req, res, next) {
+  const username = req.params.id;
+  const password = req.body.password;
+
+  let response;
+  let query = { resourceId: username, active: true };
+  Resource.findOneAndUpdate(query, { $set: { "password": password } }, { upsert: true }, (err, resource) => {
+    if (err) return next(err)
+    res.json(resource)
+  })
+});
+
 
 module.exports = router;

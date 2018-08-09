@@ -18,9 +18,12 @@ const resourcePeriodic = require('./routes/resourceperiodic');
 const technologyRoute = require('./routes/technology');
 const projectResourceRoute = require('./routes/projectResource');
 const loginRoute = require('./routes/login');
+const multer = require('multer');
 
 const attendancePublish = require('./publish/attendance');
 const leavePublish = require('./publish/leave');
+
+const attendanceJob = require('./jobs/attendance');
 
 mongoose.Promise = global.Promise;
 
@@ -28,6 +31,8 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://erste:password0@ds261660.mlab.com:61660/erstemanagement')
   .then(() => console.log('connection succesful'))
   .catch((err) => console.error(err))
+
+const multerupload = multer({ dest: 'upload/' });
 
 const app = express();
 app.use(logger('dev'));
@@ -48,10 +53,13 @@ app.use('/billing', billingRoute);
 app.use('/level', levelInfo);
 app.use('/resourceperiodic', resourcePeriodic);
 app.use('/technology', technologyRoute);
-app.use('/publish/attendance', attendancePublish);
-app.use('/publish/leave', leavePublish);
 app.use('/projectresource', projectResourceRoute);
 app.use('/login', loginRoute);
+
+app.use('/publish/attendance', attendancePublish);
+app.use('/publish/leave', leavePublish);
+
+app.use('/job/attendance', multerupload.any(), attendanceJob);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -13,6 +13,8 @@ module.exports = mongoose.model('RESOURCE', new Schema({
   location: { type: String, required: true },
   citrix: { type: Boolean, default: false },
   active: { type: Boolean, required: true },
+  visaType: { type: String },
+  username: { type: String },
   role: { type: String },
   password: { type: String },
   dateFrom: { type: Date, default: Date.now() },
