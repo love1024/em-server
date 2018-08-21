@@ -32,6 +32,7 @@ router.get('/pm/:id', (req, res, next) => {
       query = { active: true };
     Project.find(query, (err, projects) => {
       if (err) return next(err)
+      console.log(projects);
       res.json(projects)
     })
   })

@@ -1,4 +1,4 @@
 module.exports = {
   secret: "erstemanagement",
-  tokenExpiesIn: 3600
+  tokenExpiesIn: 3600,
 }
